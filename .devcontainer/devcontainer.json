@@ -1,0 +1,32 @@
+{
+  // Laboratorio BDP v7 en la nube (GitHub Codespaces) · Dr. Abel Coronado.
+  // El MISMO laboratorio de la versión portable, sin interfaz gráfica: bdp_start.py lo descarga
+  // (verifica sha256) al crear el codespace y lo enciende cada vez que el codespace arranca.
+  // Curso por omisión: UP (HDFS + Jupyter + Elasticsearch). Para UNIR: python3 bdp_start.py unir
+  "name": "BDP v7 · Laboratorio en la nube",
+  "image": "mcr.microsoft.com/devcontainers/python:1-3.12-bookworm",
+  "hostRequirements": { "cpus": 4, "memory": "16gb", "storage": "32gb" },
+  "features": {
+    "ghcr.io/devcontainers/features/sshd:1": {}
+  },
+  "postCreateCommand": "python3 bdp_start.py install",
+  "postStartCommand": "python3 bdp_start.py ${BDP_PROFILE:-up}",
+  "forwardPorts": [8888, 9870],
+  "portsAttributes": {
+    "8888": { "label": "JupyterLab (BDP v7, sin token)", "onAutoForward": "notify" },
+    "9870": { "label": "HDFS · NameNode", "onAutoForward": "silent" },
+    "9200": { "label": "Elasticsearch", "onAutoForward": "silent" },
+    "9864": { "label": "HDFS · DataNode", "onAutoForward": "silent" },
+    "5001": { "label": "API de predicción (Semana 4)", "onAutoForward": "notify" },
+    "8501": { "label": "App Streamlit (Semana 3)", "onAutoForward": "notify" }
+  },
+  "otherPortsAttributes": { "onAutoForward": "silent" },
+  "customizations": {
+    "vscode": {
+      "extensions": ["ms-toolsai.jupyter", "ms-python.python"]
+    },
+    "codespaces": {
+      "openFiles": ["LEEME.md"]
+    }
+  }
+}

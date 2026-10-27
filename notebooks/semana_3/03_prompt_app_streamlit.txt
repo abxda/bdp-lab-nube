@@ -1,0 +1,154 @@
+¡Absolutamente! Ahora entiendo perfectamente. Quieres un "prompt" o enunciado de un ejercicio para tus estudiantes, no la solución. La idea es que ellos, con su entorno ya preparado, puedan desarrollar la aplicación desde cero basándose en tus instrucciones.
+
+Aquí tienes un prompt redactado como un ejercicio de clase o un mini-proyecto.
+
+Proyecto: Creación de un Geocodificador Interactivo con Streamlit y Elasticsearch
+
+Objetivo del Proyecto:
+
+Desarrollar una aplicación web sencilla y estética utilizando Python y el framework Streamlit. La aplicación servirá como un "geocodificador": permitirá a los usuarios encontrar la ubicación geográfica de una dirección buscándola por texto, y también descubrir direcciones cercanas haciendo clic en un mapa interactivo. Todos los datos de direcciones se consultarán desde una instancia local de Elasticsearch.
+
+Entorno de Trabajo (Prerrequisitos):
+
+Se asume que cada estudiante ya cuenta con el siguiente entorno configurado y en funcionamiento:
+
+Python 3.x instalado.
+
+Un servidor de Elasticsearch corriendo localmente en http://localhost:9200.
+
+Un índice en Elasticsearch llamado geocoder_mexico que ya ha sido poblado con datos de direcciones. El mapping de este índice es el siguiente:
+
+Generated json
+{
+  "mappings": {
+    "properties": {
+      "DIRECCION_COMPLETA": {"type": "text"},
+      "CP": {"type": "keyword"},
+      "NOM_MUN": {"type": "keyword"},
+      "NOM_ENT": {"type": "keyword"},
+      "location": {"type": "geo_point"}
+    }
+  }
+}
+
+Instrucciones y Requisitos
+Paso 1: Instalación de Dependencias
+
+Antes de comenzar a codificar, asegúrate de tener instaladas todas las librerías necesarias. Abre tu terminal y ejecuta los siguientes comandos:
+
+Generated bash
+# Para construir la interfaz de la aplicación web
+python -m pip install streamlit
+
+# Para comunicarte con tu base de datos de Elasticsearch
+python -m pip install elasticsearch
+
+# Para crear y mostrar mapas interactivos
+python -m pip install folium
+python -m pip install streamlit-folium
+IGNORE_WHEN_COPYING_START
+content_copy
+download
+Use code with caution.
+Bash
+IGNORE_WHEN_COPYING_END
+Paso 2: Diseño de la Interfaz de Usuario (UI)
+
+Inspírate en el siguiente diseño de dos columnas. La aplicación debe ser limpia y fácil de usar.
+
+Columna Izquierda: Contendrá los controles de búsqueda.
+
+Un título, como "Search".
+
+Un campo de texto (st.text_input) para que el usuario escriba la dirección.
+
+Columna Derecha: Ocupará la mayor parte del espacio y mostrará el mapa interactivo.
+
+Puedes lograr esta estructura usando st.columns().
+
+Paso 3: Implementación de Funcionalidades
+
+Tu aplicación debe tener dos funcionalidades principales:
+
+Funcionalidad 1: Búsqueda por Dirección de Texto
+
+Cuando un usuario escribe una dirección en el campo de texto y presiona Enter, la aplicación debe ejecutar una consulta multi_match a tu índice geocoder_mexico.
+
+La consulta debe buscar la dirección más relevante, permitiendo cierta flexibilidad con errores de tipeo (fuzziness).
+
+Una vez encontrado el resultado, el mapa debe centrarse en esa ubicación y mostrar un único marcador azul sobre ella.
+
+Pista de Consulta (Búsqueda por Texto):
+
+Generated json
+{
+  "query": {
+    "multi_match": {
+      "query": "Av Heroe de Nacozari Sur 2301 Aguascalientes",
+      "fields": [
+        "DIRECCION_COMPLETA^3",
+        "NOM_MUN",
+        "NOM_ENT"
+      ],
+      "type": "best_fields",
+      "fuzziness": "AUTO"
+    }
+  }
+}
+IGNORE_WHEN_COPYING_START
+content_copy
+download
+Use code with caution.
+Json
+IGNORE_WHEN_COPYING_END
+
+Funcionalidad 2: Búsqueda por Clic en el Mapa
+
+El usuario debe poder hacer clic en cualquier lugar del mapa.
+
+Al detectar un clic, la aplicación debe capturar las coordenadas (latitud y longitud) de ese punto.
+
+Usando esas coordenadas, debe ejecutar una consulta _geo_distance a Elasticsearch para encontrar las 3 direcciones más cercanas.
+
+La aplicación debe limpiar los marcadores anteriores y mostrar los 3 nuevos resultados como marcadores en el mapa. También puedes mostrar los nombres de las direcciones encontradas en la columna izquierda.
+
+Pista de Consulta (Búsqueda por Cercanía Geográfica):
+
+Generated json
+{
+  "size": 3,
+  "query": { "match_all": {} },
+  "sort": [
+    {
+      "_geo_distance": {
+        "location": {
+          "lat": 21.8800,
+          "lon": -102.2960
+        },
+        "order": "asc",
+        "unit": "km"
+      }
+    }
+  ]
+}
+IGNORE_WHEN_COPYING_START
+content_copy
+download
+Use code with caution.
+Json
+IGNORE_WHEN_COPYING_END
+Consideraciones Técnicas Importantes:
+
+Conexión: Conéctate a Elasticsearch usando Elasticsearch(['http://localhost:9200']).
+
+Formato de Coordenadas: ¡Atención! Al recuperar un documento de Elasticsearch, el campo location no será un diccionario, sino un string con el formato "latitud,longitud". Deberás procesar este string (por ejemplo, con .split(',')) para separar los valores y convertirlos a números (float) antes de poder usarlos en el mapa.
+
+Interactividad: Utiliza la librería streamlit-folium para mostrar el mapa y capturar los eventos de clic del usuario.
+
+Mantenimiento de Estado: Para que el mapa no se reinicie con cada acción, usa st.session_state para guardar la posición central del mapa y la lista de marcadores a mostrar.
+
+Entregable:
+
+Un único archivo de Python (app.py) que, al ser ejecutado con el comando streamlit run app.py, lance la aplicación web funcional descrita. El código debe estar limpio y, si es posible, comentado para explicar las partes más importantes.
+
+¡Mucha suerte

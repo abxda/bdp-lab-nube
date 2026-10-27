@@ -1,0 +1,6 @@
+# salidas locales de los cuadernos
+*.gpkg
+*_local*/
+geocoder_mexico_completo.parquet
+.ipynb_checkpoints/
+__pycache__/

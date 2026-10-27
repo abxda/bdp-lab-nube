@@ -24,8 +24,7 @@ Es el mismo laboratorio de la versión portable (HDFS, Spark 4.1, Sedona, Elasti
 | Para | Comando |
 |---|---|
 | Ver qué está encendido y las direcciones | `python3 bdp_start.py status` |
-| Curso **UP** (HDFS + Jupyter + Elasticsearch) | `python3 bdp_start.py up` |
-| Curso **UNIR** (HDFS + Jupyter + Kafka) | `python3 bdp_start.py unir` |
+| Encender el laboratorio (HDFS + Jupyter + Elasticsearch) | `python3 bdp_start.py up` |
 | Cargar los datos de práctica en HDFS | `python3 bdp_start.py datos` |
 | Verificar que todo funciona (evidencia) | `python3 bdp_start.py check` |
 | Apagar todo limpio | `python3 bdp_start.py stop` |
@@ -35,7 +34,8 @@ En la terminal ya funcionan `hdfs dfs -ls /`, `spark-submit`, `python` y `curl -
 ## Cuida tus horas gratis
 
 - Esta máquina tiene 4 núcleos. Una hora de uso consume 4 de tus horas-núcleo: 120 al mes con una cuenta gratis, 180 con GitHub Student Pack.
-- Cuando termines, cierra la pestaña. El codespace se detiene solo a los 30 minutos sin uso y tu trabajo se conserva.
+- Cuando termines, detén el codespace: pulsa el botón **Codespaces** de la esquina inferior izquierda y elige **Stop Current Codespace**. Tu trabajo se conserva.
+- Si solo cierras la pestaña, el codespace se detiene solo tras 30 minutos sin actividad, y mientras tanto sigue consumiendo horas.
 
 Si algo falla, copia la salida de `python3 bdp_start.py check` y envíala por Blackboard.
 

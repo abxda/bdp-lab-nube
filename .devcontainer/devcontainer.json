@@ -6,9 +6,8 @@
   "name": "BDP v7 · Laboratorio en la nube",
   "image": "mcr.microsoft.com/devcontainers/python:1-3.12-bookworm",
   "hostRequirements": { "cpus": 4, "memory": "16gb", "storage": "32gb" },
-  "features": {
-    "ghcr.io/devcontainers/features/sshd:1": {}
-  },
+  // Sin "features": el laboratorio es autocontenido (Python, JDK, Hadoop, Spark, ES) y una feature
+  // que use apt puede romper la creación (p.ej. llave GPG vencida de un repositorio de la imagen base).
   "postCreateCommand": "python3 bdp_start.py install",
   "postStartCommand": "python3 bdp_start.py ${BDP_PROFILE:-up}",
   "forwardPorts": [8888, 9870],

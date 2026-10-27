@@ -188,7 +188,11 @@ class Lab:
         return e
 
     def notebooks(self):
-        # Codespaces: los cuadernos viven en el repo (se ven en el explorador de VS Code); si no, en el lab.
+        # Los cuadernos viven junto a este script (repositorio del curso: se ven en el explorador de
+        # VS Code). Ojo: CODESPACE_VSCODE_FOLDER no existe cuando Codespaces corre postStartCommand.
+        beside = Path(__file__).resolve().parent / "notebooks"
+        if beside.is_dir():
+            return beside
         ws = os.environ.get("CODESPACE_VSCODE_FOLDER")
         return Path(ws) / "notebooks" if ws else self.p / "notebooks"
 

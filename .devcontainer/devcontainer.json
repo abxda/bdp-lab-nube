@@ -8,6 +8,21 @@
   "hostRequirements": { "cpus": 4, "memory": "16gb", "storage": "32gb" },
   // Sin "features": el laboratorio es autocontenido (Python, JDK, Hadoop, Spark, ES) y una feature
   // que use apt puede romper la creación (p.ej. llave GPG vencida de un repositorio de la imagen base).
+  // Entorno del lab en TODAS las terminales, incluso las que se abren antes de que termine la
+  // instalación (mismas variables que bdp_start.py; el lab fija Python 3.12).
+  "remoteEnv": {
+    "BDP_HOME": "/home/vscode/bdp-v7",
+    "JAVA_HOME": "/home/vscode/bdp-v7/portable/common_jdk",
+    "HADOOP_HOME": "/home/vscode/bdp-v7/portable/hadoop",
+    "HADOOP_CONF_DIR": "/home/vscode/bdp-v7/portable/hadoop/etc/hadoop",
+    "HADOOP_OPTS": "--add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.nio=ALL-UNNAMED",
+    "HADOOP_HEAPSIZE_MAX": "512m",
+    "SPARK_HOME": "/home/vscode/bdp-v7/portable/python/lib/python3.12/site-packages/pyspark",
+    "PYSPARK_PYTHON": "/home/vscode/bdp-v7/portable/python/bin/python3",
+    "PYSPARK_DRIVER_PYTHON": "/home/vscode/bdp-v7/portable/python/bin/python3",
+    "KAFKA_LOG4J_OPTS": "-Dlog4j2.configurationFile=file:///home/vscode/bdp-v7/portable/kafka_kraft/config/tools-log4j2.yaml",
+    "PATH": "/home/vscode/bdp-v7/portable/python/bin:/home/vscode/bdp-v7/portable/hadoop/bin:/home/vscode/bdp-v7/portable/python/lib/python3.12/site-packages/pyspark/bin:/home/vscode/bdp-v7/portable/kafka_kraft/bin:/home/vscode/bdp-v7/portable/common_jdk/bin:${containerEnv:PATH}"
+  },
   "postCreateCommand": "python3 bdp_start.py install",
   "postStartCommand": "python3 bdp_start.py ${BDP_PROFILE:-up}",
   "forwardPorts": [8888, 9870],
